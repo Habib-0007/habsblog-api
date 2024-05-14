@@ -3,7 +3,6 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const serverless = require("serverless-http");
-const blogs = require("./data.json");
 
 const app = express();
 const { Router } = express;
@@ -90,36 +89,15 @@ router.get("/blogs/:id", (req, res) => {
 	);
 });
 
-router.post("/blogs", (req, es) => {
-	res.set(
-		"Access-Control-Allow-Origin",
-		"*"
-	);
-	const { blog } = req.body;
-	fs.writeFile(
-		filePath,
-		JSON.stringify({ blog }),
-		error => {
-			if (error) {
-				console.error(
-					"Error writing to file:",
-					error
-				);
-				res
-					.status(500)
-					.send(
-						"Error writing to file"
-					);
-			} else {
-				res
-					.status(200)
-					.send(
-						"Value written to file"
-					);
-			}
-		}
-	);
-});
+router.post("/blogs", (req, res) => { 	res.set( 		"Access-Control-Allow-Origin",
+"*" 	); 	const blog = req.body; 	fs.readFile(filePath, (err, data) => { 		if
+(err) { 			console.log(err.message); 			res.status(500).send(err.message); 		}
+else { 			var jsonData = JSON.parse(data); 			var id = jsonData.length;
+blog.id = id; 			jsonData.push(blog); 			fs.writeFile( 				filePath,
+JSON.stringify(jsonData), 				err => { 					if (err) {
+console.log(err.message); 						res 							.status(500)
+.send(err.message); 					} else { 						res 							.status(200) 							.send(
+"POST request made successfully" 							); 					} 				} 			); 		} 	}); }); 
 
 router.delete(
 	"/blogs/:id",
