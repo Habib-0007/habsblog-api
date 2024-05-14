@@ -89,23 +89,55 @@ router.get("/blogs/:id", (req, res) => {
 	);
 });
 
-router.post("/blogs", (req, res) => { 	res.set( 		"Access-Control-Allow-Origin",
-"*" 	); 	const blog = req.body; 	fs.readFile(filePath, (err, data) => { 		if
-(err) { 			console.log(err.message); 			res.status(500).send(err.message); 		}
-else { 			var jsonData = JSON.parse(data); 			var id = jsonData.length;
-blog.id = id; 			jsonData.push(blog); 			fs.writeFile( 				filePath,
-JSON.stringify(jsonData), 				err => { 					if (err) {
-console.log(err.message); 						res 							.status(500)
-.send(err.message); 					} else { 						res 							.status(200) 							.send(
-"POST request made successfully" 							); 					} 				} 			); 		} 	}); }); 
+router.post("/blogs", (req, res) => {
+	res.set(
+		"Access-Control-Allow-Origin",
+		"*"
+	);
+	
+	res.writeHead(200, {
+            'Content-Type' : 'application/json'
+        });
+	
+	const blog = req.body;
+	fs.readFile(filePath, (err, data) => {
+		if (err) {
+			console.log(err.message);
+			res.status(500).send(err.message);
+		} else {
+			var jsonData = JSON.parse(data);
+			var id = jsonData.length;
+			blog.id = id;
+			jsonData.push(blog);
+			fs.writeFile(
+				filePath,
+				JSON.stringify(jsonData),
+				err => {
+					if (err) {
+						console.log(err.message);
+						res
+							.status(500)
+							.send(err.message);
+					} else {
+						res
+							.status(200)
+							.send(
+								"POST request made successfully"
+							);
+					}
+				}
+			);
+		}
+	});
+});
 
 router.delete(
 	"/blogs/:id",
 	(req, res) => {
-			res.set(
-		"Access-Control-Allow-Origin",
-		"*"
-	);
+		res.set(
+			"Access-Control-Allow-Origin",
+			"*"
+		);
 
 		const blogId = parseInt(
 			req.params.id
