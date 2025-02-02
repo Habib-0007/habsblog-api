@@ -20,11 +20,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: '*',
-  }),
-);
+app.use(cors());
 
 // Session configuration
 app.use(

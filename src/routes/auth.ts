@@ -49,6 +49,7 @@ passport.deserializeUser(
 );
 
 router.post('/signup', async (req: Request, res: Response): Promise<void> => {
+  res.set('Access-Control-Allow-Origin', '*');
   try {
     const { username, email, password } = req.body;
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
