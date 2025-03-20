@@ -1,49 +1,86 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import passport from 'passport';
-import session from 'express-session';
+import express, { Request, Response, NextFunction, Application } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import mongoSanitize from 'express-mongo-sanitize';
+import hpp from 'hpp';
+import compression from 'compression';
+import { env } from './config/env.config';
+import { connectDB } from './config/db.config';
+import { errorHandler } from './middlewares/errorhandler.middleware';
+import { apiLimiter } from './middlewares/ratelimiter.middlewares';
+import authRoutes from './routes/auth.routes';
+import postRoutes from './routes/post.routes';
+import commentRoutes from './routes/comment.routes';
+import adminRoutes from './routes/admin.routes';
+import { notFoundHandler } from './middlewares/notfound.middlewares';
 
-import authRoutes from './routes/auth';
-import userRoutes from './routes/user';
-import postRoutes from './routes/post';
-import commentRoutes from './routes/comment';
+connectDB();
 
-import { connectDB } from './config/db';
+const app: Application = express();
 
-dotenv.config();
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+app.use(cookieParser());
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(helmet());
 
-// Session configuration
+app.use(mongoSanitize());
+
+app.use(apiLimiter);
+
+app.use(hpp());
+
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
+  cors({
+    origin: env.NODE_ENV === 'production' ? env.FRONTEND_URL : true,
+    credentials: true,
   }),
 );
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(compression());
 
-// Connect to MongoDB
-connectDB();
+if (env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
-// Routes
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to Habsblog API, API is running correctly',
+    environment: env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/admin', adminRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Server is running',
+    environment: env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+const PORT = env.PORT;
+const server = app.listen(PORT, () => {
+  console.log(`Server running in ${env.NODE_ENV} mode on port ${PORT}`);
+});
+
+process.on('unhandledRejection', (err: Error) => {
+  console.error(`Error: ${err.message}`);
+
+  server.close(() => process.exit(1));
+});
+
+app.use(errorHandler);
