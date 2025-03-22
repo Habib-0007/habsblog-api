@@ -33,12 +33,7 @@ app.use(apiLimiter);
 
 app.use(hpp());
 
-app.use(
-  cors({
-    origin: env.NODE_ENV === 'production' ? env.FRONTEND_URL : true,
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 app.use(compression());
 
