@@ -69,8 +69,8 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-app.use(notFoundHandler);
 app.use(errorHandler);
+app.use(notFoundHandler);
 
 const PORT = env.PORT;
 const server = app.listen(PORT, () => {
@@ -82,5 +82,3 @@ process.on('unhandledRejection', (err: Error) => {
 
   server.close(() => process.exit(1));
 });
-
-app.use(errorHandler);
