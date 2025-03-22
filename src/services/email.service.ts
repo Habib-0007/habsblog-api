@@ -10,14 +10,15 @@ interface EmailOptions {
 }
 
 const createTransporter = () => {
-  return nodemailer.createTransport({
-    // host: env.EMAIL_HOST,
-    // port: parseInt(env.EMAIL_PORT as string),
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
     auth: {
-      // user: env.EMAIL_USER,
-      // pass: env.EMAIL_PASS,
+      user: env.EMAIL_USER, 
+      pass: env.EMAIL_PASS, 
     },
   });
+
+  return transporter
 };
 
 // Send email
@@ -26,7 +27,7 @@ export const sendEmail = async (options: EmailOptions): Promise<void> => {
     const transporter = createTransporter();
 
     const message = {
-      // from: `${env.EMAIL_FROM}`,
+      from: `${env.EMAIL_FROM}`,
       to: options.email,
       subject: options.subject,
       text: options.message,

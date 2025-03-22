@@ -13,6 +13,11 @@ const envSchema = z.object({
   NODE_ENV: z.string().default('development'),
   JWT_EXPIRE: z.string().default('30d'),
   JWT_COOKIE_EXPIRE: z.string().default('30'),
+  EMAIL_USER: z.string().email('EMAIL_USER must be a valid email'),
+  EMAIL_PASS: z.string().min(1, 'EMAIL_PASSWORD is required'),
+  EMAIL_FROM: z
+    .string()
+    .min(1, 'EMAIL_FROM must be a valid email with app name'),
   RATE_LIMIT_WINDOW_MS: z
     .string()
     .regex(/^\d+$/, 'Must be a number')
