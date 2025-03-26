@@ -33,7 +33,12 @@ app.use(apiLimiter);
 
 app.use(hpp());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+);
 
 app.use(compression());
 

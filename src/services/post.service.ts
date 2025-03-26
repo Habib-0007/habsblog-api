@@ -144,8 +144,11 @@ export const updatePost = async (
     throw new AppError('Post not found', 404);
   }
 
-  if (post.author.toString() !== userId && !isAdmin) {
-    throw new AppError('Not authorized to update this post', 403);
+  if (post.author.toString() != userId && !isAdmin) {
+    throw new AppError(
+      `Not authorized to update this post ${post.author.toString()} ${userId}`,
+      403,
+    );
   }
 
   if (updateData.coverImage) {
@@ -184,7 +187,7 @@ export const deletePost = async (
     throw new AppError('Post not found', 404);
   }
 
-  if (post.author.toString() !== userId && !isAdmin) {
+  if (post.author.toString() != userId && !isAdmin) {
     throw new AppError('Not authorized to delete this post', 403);
   }
 

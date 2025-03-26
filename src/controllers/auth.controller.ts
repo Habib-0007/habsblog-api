@@ -89,6 +89,10 @@ export const logout = asyncHandler(
 
 export const getMe = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new AppError('User not authenticated', 401));
+    }
+
     const user = req.user;
 
     res.status(200).json({

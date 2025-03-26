@@ -25,7 +25,6 @@ router.post(
 router.put(
   '/:id',
   uploadSingleImage('coverImage'),
-  protect,
   validate([...idParamValidator(), ...updatePostValidator]),
   postController.updatePost,
 );
