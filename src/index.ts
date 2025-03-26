@@ -35,7 +35,7 @@ app.use(hpp());
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://habsblog.vercel.app/',
     credentials: true,
   }),
 );
