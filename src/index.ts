@@ -29,7 +29,7 @@ app.use(apiLimiter);
 app.use(hpp());
 app.use(compression());
 
-const allowedOrigins = ['http://localhost:3000', 'https://habsblog.vercel.app'];
+const allowedOrigins = ['http://localhost:3001', 'https://habsblog.vercel.app'];
 
 app.use(
   cors({
@@ -42,7 +42,8 @@ app.use(
     },
     credentials: true,
     methods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    allowedHeaders:
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   }),
 );
 
