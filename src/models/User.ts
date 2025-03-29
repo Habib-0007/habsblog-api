@@ -46,7 +46,7 @@ const UserSchema = new Schema<IUser>(
     avatar: {
       type: String,
       default:
-        'https://res.cloudinary.com/demo/image/upload/v1/default-avatar.png',
+        'https://res.cloudinary.com/dibfl3dbk/image/upload/v1743260493/avatar-svgrepo-com_uz56kl.svg',
     },
     avatarPublicId: {
       type: String,
