@@ -33,7 +33,6 @@ export const createPost = asyncHandler(
   },
 );
 
-// Rest of the file remains unchanged
 export const getPosts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { search, tag, author, status, sortBy, page, limit } = req.query;
@@ -75,7 +74,6 @@ export const getPost = asyncHandler(
 
 export const updatePost = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if req.user exists before accessing its properties
     if (!req.user) {
       return next(new AppError('User not authenticated', 401));
     }
@@ -110,7 +108,6 @@ export const updatePost = asyncHandler(
 
 export const deletePost = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if req.user exists before accessing its properties
     if (!req.user) {
       return next(new AppError('User not authenticated', 401));
     }
@@ -130,7 +127,6 @@ export const deletePost = asyncHandler(
 
 export const toggleLikePost = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if req.user exists before accessing its properties
     if (!req.user) {
       return next(new AppError('User not authenticated', 401));
     }
@@ -149,7 +145,6 @@ export const toggleLikePost = asyncHandler(
 
 export const getUserDrafts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if req.user exists before accessing its properties
     if (!req.user) {
       return next(new AppError('User not authenticated', 401));
     }
