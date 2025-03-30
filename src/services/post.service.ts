@@ -28,7 +28,7 @@ export const createPost = async (
     }
   }
 
-  const generatedExcerpt = excerpt || markdownToPlainText(content, 160);
+  const generatedExcerpt = excerpt || await markdownToPlainText(content, 160);
 
   const post = await Post.create({
     title,
