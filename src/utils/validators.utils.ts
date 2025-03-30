@@ -61,7 +61,7 @@ export const createPostValidator: ValidationChain[] = [
     .optional()
     .isIn(['draft', 'published'])
     .withMessage('Status must be either draft or published'),
-  body('tags').optional().isArray().withMessage('Tags must be an array'),
+  // body('tags').optional().isArray().withMessage('Tags must be an array'),
 ];
 
 export const updatePostValidator: ValidationChain[] = [
