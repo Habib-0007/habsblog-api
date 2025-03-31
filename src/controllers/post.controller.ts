@@ -19,7 +19,7 @@ export const createPost = asyncHandler(
 
     const post = await postService.createPost(req.user._id, {
       title,
-      content,
+      content, // Content will be processed in the service
       excerpt,
       coverImage,
       tags: tags ? JSON.parse(tags) : undefined,
@@ -90,7 +90,7 @@ export const updatePost = asyncHandler(
       req.user._id,
       {
         title,
-        content,
+        content, // Content will be processed in the service
         excerpt,
         coverImage,
         tags: tags ? JSON.parse(tags) : undefined,

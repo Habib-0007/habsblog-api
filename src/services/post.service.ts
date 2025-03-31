@@ -8,6 +8,7 @@ import {
 } from '../types/post.types';
 import { markdownToPlainText } from './markdown.service';
 import mongoose from 'mongoose';
+import { extractAndUploadImages } from '../utils/contentImage.utils'; // Import utility for image extraction and upload
 
 export const createPost = async (
   userId: string,
@@ -28,11 +29,18 @@ export const createPost = async (
     }
   }
 
-  const generatedExcerpt = excerpt || await markdownToPlainText(content, 160);
+  // Handle image uploads in content
+  const processedContent = await extractAndUploadImages(
+    content,
+    'posts/content',
+  );
+
+  const generatedExcerpt =
+    excerpt || (await markdownToPlainText(processedContent, 160));
 
   const post = await Post.create({
     title,
-    content,
+    content: processedContent,
     excerpt: generatedExcerpt,
     coverImage: coverImageUrl,
     coverImagePublicId,
@@ -162,6 +170,13 @@ export const updatePost = async (
     );
     updateData.coverImage = uploadResult.secure_url;
     post.coverImagePublicId = uploadResult.public_id;
+  }
+
+  if (updateData.content) {
+    updateData.content = await extractAndUploadImages(
+      updateData.content,
+      'posts/content',
+    );
   }
 
   if (updateData.title) post.title = updateData.title;
